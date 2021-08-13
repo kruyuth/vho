@@ -41,6 +41,7 @@ function visitHomeRecord() {
   var range = sheet.getRange(start_row, 1, lastRow-1 , lastColumn);
   range.activate()
   var destinationFolder = ''
+  var removepdf = 'false'
 
     var checkProcess = sheet.getRange(lastRow,lastColumn).getValue()  //ดึงข้อมูลในคอลัมภ์สุดท้าย
     if(checkProcess!==processSuccess) {       //ถ้าข้อมูลในคอลัมสุดท้ายไม่เท่ากับ Process success จะดึงข้อมูลที่เหลือขึ้นมาทำการประมวลผล             
@@ -151,77 +152,80 @@ function visitHomeRecord() {
       //ม.1
       if(stuClass == 'ม 1' && stuRoom == 1){
         destinationFolder = m11   //Folder ม.1/1
-      } 
+      }else 
       if(stuClass == 'ม 1' && stuRoom == 2){
         destinationFolder = m12   //Folder ม.1/2
-      } 
+      }else 
       if(stuClass == 'ม 1' && stuRoom == 3){
         destinationFolder = m13   //Folder ม.1/3
-      }
+      }else
       if(stuClass == 'ม 1' && stuRoom == 4){
         destinationFolder = m14   //Folder ม.1/4
-      }
+      }else
       //ม.2
       if(stuClass == 'ม 2' && stuRoom == 1){
         destinationFolder = m21   //Folder ม.2/1
-      } 
+      }else 
       if(stuClass == 'ม 2' && stuRoom == 2){
         destinationFolder = m22   //Folder ม.2/2
-      } 
+      }else 
       if(stuClass == 'ม 2' && stuRoom == 3){
         destinationFolder = m23   //Folder ม.2/3
-      }
+      }else
       if(stuClass == 'ม 2' && stuRoom == 4){
         destinationFolder = m24   //Folder ม.2/4
-      }
+      }else
       //ม.3
       if(stuClass == 'ม 3' && stuRoom == 1){
         destinationFolder = m31   //Folder ม.3/1
-      } 
+      }else 
       if(stuClass == 'ม 3' && stuRoom == 2){
         destinationFolder = m32   //Folder ม.3/2
-      } 
+      }else 
       if(stuClass == 'ม 3' && stuRoom == 3){
         destinationFolder = m33   //Folder ม.3/3
-      }
+      }else
       if(stuClass == 'ม 3' && stuRoom == 4){
         destinationFolder = m34   //Folder ม.3/4
-      }
+      }else
       //ม.4
       if(stuClass == 'ม 4' && stuRoom == 1){
         destinationFolder = m41   //Folder ม.4/1
-      } 
+      }else 
       if(stuClass == 'ม 4' && stuRoom == 2){
         destinationFolder = m42   //Folder ม.4/2
-      } 
+      }else 
       if(stuClass == 'ม 4' && stuRoom == 3){
         destinationFolder = m43   //Folder ม.4/3
-      }
+      }else
       //ม.5
       if(stuClass == 'ม 5' && stuRoom == 1){
         destinationFolder = m51   //Folder ม.5/1
-      } 
+      }else 
       if(stuClass == 'ม 5' && stuRoom == 2){
         destinationFolder = m52   //Folder ม.5/2
-      } 
+      }else 
       if(stuClass == 'ม 5' && stuRoom == 3){
         destinationFolder = m53   //Folder ม.5/3
-      }
+      }else
       //ม.6
       if(stuClass == 'ม 6' && stuRoom == 1){
         destinationFolder = m61   //Folder ม.6/1
-      } 
+      }else 
       if(stuClass == 'ม 6' && stuRoom == 2){
         destinationFolder = m62   //Folder ม.6/2
-      } 
+      }else 
       if(stuClass == 'ม 6' && stuRoom == 3){
         destinationFolder = m63   //Folder ม.6/3
-      }
+      }else
       if(stuClass == 'ม 6' && stuRoom == 4){
         destinationFolder = m64   //Folder ม.6/4
-      }
+      }else{
+        destinationFolder = '1VsyOdzEh8DAvhXPVwzBuj6kleSrZ08cQ'
+        removepdf = 'true'
+      } 
 
-      var file_name = 'บันทึกการเยี่ยมบ้าน '+stuClass+'/'+stuRoom+' '+stuOrderID + fName +' '+lName ;
+      var file_name = 'บันทึกการเยี่ยมบ้าน '+stuClass+'/'+stuRoom+' '+stuOrderID+' ' + fName +' '+lName ;
       var copyFile = DriveApp.getFileById(GDOC_TEMPLATE_ID).makeCopy(file_name) 
       DriveApp.getFolderById(destinationFolder).addFile(copyFile);
       var fileId = copyFile.getId()
@@ -355,18 +359,27 @@ function visitHomeRecord() {
         slide2.insertImage(IMAGE_URL_PIC2, 290, 205, 265, 120).sendToBack   
         var IMAGE_URL_PIC3 =  photo3.toString().replace("https://drive.google.com/open?", "https://doc.google.com/uc?export=view&")
         slide2.insertImage(IMAGE_URL_PIC3, 35, 390, 265, 120).sendToBack   
-        var IMAGE_URL_PIC4 =  photo4.toString().replace("https://drive.google.com/open?", "https://doc.google.com/uc?export=view&")
-        slide2.insertImage(IMAGE_URL_PIC4, 290, 390, 265, 120).sendToBack        
+        if(photo4!==''){
+          var IMAGE_URL_PIC4 =  photo4.toString().replace("https://drive.google.com/open?", "https://doc.google.com/uc?export=view&")
+          slide2.insertImage(IMAGE_URL_PIC4, 290, 390, 265, 120).sendToBack    
+        }    
         slideCopy.saveAndClose(); //***บันทึกและปิดไฟล์สไลด์
       
       copyFile.setTrashed(true)
       var pdf_file = DriveApp.createFile(copyFile.getAs("application/pdf"))
       var save_pdf_folder = DriveApp.getFolderById(destinationFolder);
       save_pdf_folder.addFile(pdf_file);
-      subject = 'เอกสารการเยี่ยมบ้านของ '+nameTitle+fName+' '+lName
-      message = 'เรียนครูประจำชั้น'+stuClass+'/'+stuRoom+'\n\tเนื่องด้วยงานระบบดูแลช่วยเหลือนักเรียนโรงเรียนฤทธิณรงค์รอน ได้จัดทำบันทึกการเยี่ยมบ้านของ'+nameTitle+fName+' '+lName+' ชั้น'+stuClass+'/'+stuRoom+' เสร็จแล้ว และได้แนบแบบบันทึกการเยี่ยมบ้านมาในอีเมลฉบับนี้แล้ว ทีมงานขอขอบคุณที่ท่านให้ความร่วมมือในการจัดทำระบบดูแลช่วยเหลือนักเรียนของโรงเรียนฤทธิณรงค์รอนให้สำเร็จลุล่วงไปด้วยดี ทางทีมงานจะได้นำข้อมูลนี้ไปประมวลผลเพื่อให้การช่วยเหลือนักเรียนต่อไป\n\nงานรับบดูแลช่วยเหลือ\nกิจกรรมพัฒนาผู้เรียน'
-      MailApp.sendEmail(t1Email,subject,message,{attachments:[pdf_file],cc:t2Email})
-      sheet.getRange(lastRow, lastColumn+1).setValue(processSuccess) //พิมพ์ข้อความ Process success ในคอลัมภ์สุดท้าย
+      if(removepdf=='true'){
+        pdf_file.setTrashed(true)
+        subject = 'เอกสารการเยี่ยมบ้านของ '+nameTitle+fName+' '+lName +' ผิดพลาด'
+        message = 'เรียนครูประจำชั้น'+stuClass+'/'+stuRoom+'\n\tเนื่องด้วยงานระบบดูแลช่วยเหลือนักเรียนโรงเรียนฤทธิณรงค์รอน ได้จัดทำบันทึกการเยี่ยมบ้านของ'+nameTitle+fName+' '+lName+' ชั้น'+stuClass+'/'+stuRoom+' เกิดความผิดพลาดในการกรอกข้อมูลบางประการ เช่น การระบุชั้นเรียน/ห้องเรียนนักเรียนผิดพลาด กรุณากรอกข้อมูลเข้ามาใหม่อีกครั้ง หากยังเกิดความผิดพลาดเช่นเดิม กรุณาติดต่อผู้ดูแลระบบ \n\nงานระบบดูแลช่วยเหลือ\nกิจกรรมพัฒนาผู้เรียน'
+      MailApp.sendEmail(t1Email,subject,message,{cc:t2Email})
+      } else {
+        subject = 'เอกสารการเยี่ยมบ้านของ '+nameTitle+fName+' '+lName
+        message = 'เรียนครูประจำชั้น'+stuClass+'/'+stuRoom+'\n\tเนื่องด้วยงานระบบดูแลช่วยเหลือนักเรียนโรงเรียนฤทธิณรงค์รอน ได้จัดทำบันทึกการเยี่ยมบ้านของ'+nameTitle+fName+' '+lName+' ชั้น'+stuClass+'/'+stuRoom+' เสร็จแล้ว และได้แนบแบบบันทึกการเยี่ยมบ้านมาในอีเมลฉบับนี้แล้ว ทีมงานขอขอบคุณที่ท่านให้ความร่วมมือในการจัดทำระบบดูแลช่วยเหลือนักเรียนของโรงเรียนฤทธิณรงค์รอนให้สำเร็จลุล่วงไปด้วยดี ทางทีมงานจะได้นำข้อมูลนี้ไปประมวลผลเพื่อให้การช่วยเหลือนักเรียนต่อไป\n\nงานระบบดูแลช่วยเหลือ\nกิจกรรมพัฒนาผู้เรียน'
+        MailApp.sendEmail(t1Email,subject,message,{attachments:[pdf_file],cc:t2Email})
+      }
+      sheet.getRange(lastRow, 82).setValue(processSuccess) //พิมพ์ข้อความ Process success ในคอลัมภ์สุดท้าย
       SpreadsheetApp.flush()
     }
 }
